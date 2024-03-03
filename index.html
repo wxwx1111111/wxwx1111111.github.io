@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="icon" href="img/导航栏图标.ico" type="image/x-icon" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>致净科技</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        font-family: 'Times New Roman', Times, serif;
+      }
+      .homePage {
+        margin: 0 auto;
+       
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow-x: auto;
+        
+      }
+      .backHome {
+        width: 100%;
+        height: 120px;
+
+        margin-top: 80px;
+        margin-bottom: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        background: url('./static/menu/致净科技3-removebg-preview.png') no-repeat;
+        background-size: cover;
+      }
+      .button-group {
+        width: 228px;
+        height: 285px;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+      }
+      .button {
+        text-align: center;
+        margin-bottom: 25px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 20px;
+        width: 100%;
+        cursor: pointer;
+      }
+      .active {
+        background-color: rgba(128, 128, 128, 0.3);
+      }
+
+      .container {
+        min-width: 1280px;
+        height: 100vh;
+        background-color: rgb(151, 215, 247);
+        display: flex;
+        overflow: hidden;
+      }
+      .menu {
+        width: 268px;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: url('./static/menu/image.png') no-repeat;
+        background-size: cover;
+      }
+      .content {
+        width: 100%;
+        height: 100vh;
+        overflow: auto;
+        background-color: rgb(226, 234, 162);
+        background-size: cover;
+        background-position: center;
+      }
+      .page-container {
+        display: none; /* 隐藏所有页面 */
+      }
+      .page-container img {
+        width: 100%;
+      }
+      #default {
+        display: block; /* 默认显示此页面 */
+
+        width: 100%;
+        height: 100%;
+        background: url('./static/content/Screenshot_20240303_212139.jpg') no-repeat;
+        background-size: cover;
+        background-position: -2px;
+        overflow: hidden;
+      }
+
+      /* 登录页的样式 */
+      .searchAndLogin {
+        position: absolute;
+        top: 13px;
+        right: 50px;
+        width: 350px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+      }
+
+      .user {
+        cursor: pointer;
+        color: white;
+        margin-right: 10px; /* 根据需要调整 */
+        /* 其他样式 */
+      }
+
+      .searchBox {
+        padding-left: 20px;
+        width: 155px;
+        height: 22px;
+        margin-right: 12px;
+        margin-left: 12px;
+        border-radius: 15px;
+
+        background-color: rgba(255, 255, 255, 0.5);
+        border: none;
+        outline: none; /* 去除聚焦时的轮廓线 */
+        -webkit-appearance: none; /* 对于iOS Safari等浏览器，去除内置的样式 */
+        -moz-appearance: none; /* 对于Firefox浏览器，去除内置的样式 */
+        appearance: none; /* 标准方式去除内置的样式 */
+        /* 可选：添加自定义文本样式，如字体大小、颜色等 */
+        font-size: 16px; /* 示例：设置字体大小 */
+        color: #333; /* 示例：设置字体颜色 */
+      }
+
+      .loginBtn {
+        font-size: 25px;
+        color: white;
+        font-weight: bolder;
+        cursor: pointer;
+      }
+
+      .topMenu {
+        position: absolute;
+        top: 80px;
+        right: 40px;
+        width: 800px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 1.5em;
+        color: white;
+        font-weight: bold;
+        font-size: 18px;
+      }
+      .top-button {
+        cursor: pointer;
+      }
+
+      /* 弹出的登录框 */
+      .loginBtnActive {
+        text-decoration: underline;
+        text-decoration-color: white; /* 或使用 shorthand: text-decoration: underline white; */
+      }
+
+      .loginWindow,
+      .registerWindow {
+        position: absolute;
+        border-radius: 10px;
+        top: 300px;
+        right: 400px;
+        width: 300px;
+        height: 280px;
+
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        background-color: rgba(255, 255, 255, 0.8);
+      }
+      .loginWindow .title,
+      .registerWindow .title {
+        margin-left: 120px;
+        margin-top: 30px;
+        font-size: 26px;
+        color: #0172aa;
+        font-weight: bold;
+      }
+
+      .loginWindow .inputBox,
+      .registerWindow .inputBox {
+        margin-top: 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .loginWindow .inputBox input,
+      .registerWindow .inputBox input {
+        border-radius: 6px;
+        background: none; /* 移除背景 */
+        border: none; /* 移除边框 */
+        outline: none; /* 移除焦点时的轮廓 */
+        padding: 0; /* 移除内边距 */
+        margin: 0; /* 移除外边距 */
+        margin-bottom: 10px;
+        width: 270px;
+        height: 35px;
+        line-height: 35px;
+
+        background-color: rgba(193, 208, 213, 0.5);
+      }
+      .loginWindow .inputBox input::placeholder,
+      .registerWindow .inputBox input::placeholder {
+        padding: 10px 0; /* 上下填充，以确保文本垂直居中 */
+        padding-left: 10px;
+        vertical-align: middle;
+        font-size: 20px;
+        height: 35px;
+        line-height: 35px;
+        color: white;
+      }
+      .loginWindow .submitBtn,
+      .registerWindow .submitBtn {
+        position: absolute;
+        border: #0172aa solid 1px;
+        width: 90px;
+        height: 26px;
+        color: #0172aa;
+        font-weight: bold;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 20px;
+        right: 25px;
+        bottom: 50px;
+        cursor: pointer;
+      }
+
+      .loginWindow .moreInfo,
+      .registerWindow .moreInfo {
+        width: 110px;
+        color: #80b0d2;
+        font-weight: bold;
+        position: absolute;
+        align-items: center;
+        justify-content: space-between;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        font-size: 12px;
+        right: 25px;
+        bottom: 15px;
+        cursor: pointer;
+      }
+
+      .content5_1 {
+        width: 300px;
+        height: 500px;
+
+        position: absolute;
+        top: 150px;
+        left: 300px;
+      }
+
+      .content5_2 {
+        width: 300px;
+        height: 500px;
+
+        position: absolute;
+        top: 150px;
+        left: 700px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="homePage">
+      <img src="./static/首页源文件.jpg" style="width: 100%;" alt="">
+    </div>
+    <div class="container">
+      <div class="menu">
+        <div class="backHome"></div>
+        <div class="button-group">
+          <div class="button" data-page="page1">关于我们</div>
+          <div class="button" data-page="page2">产品介绍</div>
+          <div class="button" data-page="page3">产品订购</div>
+          <div class="button" data-page="page4">战略布局</div>
+          <div class="button" data-page="page5">业务发展</div>
+        </div>
+      </div>
+      <div class="content">
+        <!-- 默认显示的页面 -->
+        <div class="page-container" id="default">
+          <div class="searchAndLogin">
+            <div class="user"></div>
+            <input type="text" class="searchBox" />
+            <div class="loginBtn">登录</div>
+          </div>
+          <div class="topMenu">
+            <div class="top-button" id="backHome">首页</div>
+            <div class="top-button" data-page="page1">关于我们</div>
+            <div class="top-button" data-page="page2">产品介绍</div>
+            <div class="top-button" data-page="page3">产品订购</div>
+            <div class="top-button" data-page="page4">战略布局</div>
+            <div class="top-button" data-page="page5">业务发展</div>
+          </div>
+
+          <div class="loginWindow">
+            <div class="title">登录</div>
+            <div class="inputBox">
+              <input type="text" placeholder="账号名" name="username" id="" />
+              <input type="password" placeholder="密码" name="password" id="" />
+            </div>
+            <div class="submitBtn" id="loginSubmit">确认</div>
+
+            <div class="moreInfo">
+              <div></div>
+              <div id="registerBtn">免费注册</div>
+            </div>
+          </div>
+          <!-- 注册窗口 -->
+          <div class="registerWindow">
+            <div class="title">注册</div>
+            <div class="inputBox">
+              <input type="text" placeholder="设置账号名" name="newUsername" />
+              <input type="password" placeholder="设置密码" name="newPassword" />
+            </div>
+            <div class="submitBtn" id="registerSubmitBtn">注册</div>
+            <div class="moreInfo">
+              <div></div>
+              <div id="backLogin">返回登录</div>
+            </div>
+          </div>
+        </div>
+        <!-- 其他页面 -->
+        <div class="page-container" id="page1">
+          <img src="./static/content/content1.png" alt="" />
+        </div>
+        <div class="page-container" id="page2">
+          <img src="./static/content/content2.png" alt="" />
+        </div>
+        <div class="page-container" id="page3">
+          <img src="./static/content/content3.png" alt="" />
+        </div>
+        <div class="page-container" id="page4">
+          <img src="./static/content/content4.png" alt="" />
+        </div>
+        <div class="page-container" id="page5" style="padding-bottom: 0">
+          <div class="content5_1"></div>
+          <div class="content5_2"></div>
+          <img src="./static/content/content5.png" id="content5_1" alt="" />
+          <img src="./static/content/content6.png" id="content5_2" style="display: none" alt="" />
+        </div>
+      </div>
+    </div>
+
+    <script>
+      $(document).ready(function () {
+        $('.content5_1').click(function () {
+          $('#content5_1').show()
+          $('#content5_2').hide()
+        })
+
+        $('.content5_2').click(function () {
+          $('#content5_1').hide()
+          $('#content5_2').show()
+        })
+
+        //获取登录状态
+        Object.keys(localStorage).forEach(function (key) {
+          const userInfoString = localStorage.getItem(key)
+          const userInfo = JSON.parse(userInfoString)
+          if (userInfo.isLoggedIn) {
+            // 找到已登录的用户，执行相应的逻辑
+            var displayUsername = key.length > 5 ? key.substring(0, 5) + '...' : key
+            $('.user')
+              .text('用户:' + displayUsername)
+              .show()
+            $('.loginBtn').text('注销')
+            $('.loginWindow').hide()
+            // 可能还需要执行其他逻辑
+            return false // 跳出循环
+          }
+        })
+
+        $('.container').hide()
+
+        // 点击返回首页
+        $('.backHome').click(function () {
+          $('.homePage').show()
+          $('.container').hide()
+          // 移除所有按钮的激活状态并显示默认页面
+          $('.button').removeClass('active')
+          $('.page-container').hide()
+          $('#default').show()
+        })
+
+        // 点击首页背景切换到内容页面
+        $('.homePage').click(function () {
+          $(this).hide()
+          $('.container').show()
+        })
+
+        // 点击侧边栏按钮切换内容
+        $('.button').click(function () {
+          $('.button').removeClass('active') // 移除其他按钮的激活状态
+          $(this).addClass('active') // 激活点击的按钮
+          var pageToShow = $(this).data('page')
+          $('.page-container').hide() // 隐藏所有页面
+          $('#' + pageToShow).show() // 显示对应的页面
+        })
+
+        // 点击顶部菜单按钮时触发侧边菜单中对应按钮的点击事件
+        $('.top-button').click(function () {
+          var page = $(this).data('page') // 获取点击的顶部按钮对应的页面标识
+
+          if (page) {
+            // 如果存在对应的页面标识，找到侧边菜单中对应的按钮并触发点击
+            $(".button[data-page='" + page + "']").click()
+          } else if ($(this).attr('id') === 'backHome') {
+            // 如果点击的是"首页"按钮，触发返回首页的逻辑
+            $('.backHome').click()
+          }
+        })
+
+        $('#registerBtn').click(function () {
+          $('.loginBtn').removeClass('loginBtnActive') // 移除登录按钮的下划线样式
+          $('.loginWindow').hide()
+          $('.registerWindow').show()
+        })
+
+        // 注册提交按钮点击事件
+        $('#registerSubmitBtn').click(function () {
+          const newUsername = $("input[name='newUsername']").val().trim()
+          const newPassword = $("input[name='newPassword']").val().trim()
+          // 校验用户名：只能是字母或数字，且不超过10位
+          var usernameRegex = /^[a-zA-Z0-9]{1,10}$/
+          // 校验密码：只能是数字，且长度为6到15位
+          var passwordRegex = /^[0-9]{6,15}$/
+
+          if (!usernameRegex.test(newUsername)) {
+            alert('用户名只能包含字母或数字，且长度不能超过10位！')
+            return // 停止执行
+          }
+
+          if (!passwordRegex.test(newPassword)) {
+            alert('密码只能是6-15位的数字！')
+            return // 停止执行
+          }
+
+          if (newUsername && newPassword) {
+            // 创建用户信息对象
+            const userInfo = {
+              password: newPassword,
+              isLoggedIn: false, // 初始时，用户未登录
+            }
+
+            // 将用户信息对象保存到localStorage
+            localStorage.setItem(newUsername, JSON.stringify(userInfo))
+            alert('注册成功！')
+            $('.registerWindow').hide()
+          } else {
+            alert('账号名和密码不能为空！')
+          }
+        })
+
+        // 登录按钮点击事件
+        $('#loginSubmit').click(function () {
+          var username = $("input[name='username']").val().trim() // 获取用户名输入
+          var password = $("input[name='password']").val().trim() // 获取密码输入
+          const storedPassword = localStorage.getItem(username)
+
+          // 检查用户名和密码是否都已输入
+          if (!username || !password) {
+            alert('请确保用户名和密码均已输入！')
+            return // 提前返回，不继续执行后续代码
+          }
+
+          // 检查用户名是否已注册（即localStorage中是否有此用户名）
+          if (storedPassword === null) {
+            alert('该用户未注册！')
+            return // 用户未注册，提前返回
+          }
+
+          // 检查密码是否正确
+          const userInfo = JSON.parse(storedPassword)
+          if (password === userInfo.password) {
+            // 更新用户的登录状态
+            userInfo.isLoggedIn = true
+            localStorage.setItem(username, JSON.stringify(userInfo))
+
+            // 登录成功逻辑
+            $('.loginWindow').hide() // 隐藏登录窗口
+            $('.loginBtn').text('注销') // 更改登录按钮文本为“注销”
+            $('.loginBtn').removeClass('loginBtnActive') // 移除登录按钮的下划线样式
+            alert('登录成功！')
+            // 显示用户名，如果超过5个字符，则以省略形式显示
+            var displayUsername = username.length > 5 ? username.substring(0, 5) + '...' : username
+            $('.user')
+              .text('用户:' + displayUsername)
+              .show() // 更新和显示用户名
+
+            // 清空输入框
+            $("input[name='username']").val('')
+            $("input[name='password']").val('')
+          } else {
+            alert('密码错误！')
+            return // 密码错误，提前返回
+          }
+        })
+
+        // 返回登录
+        $('#backLogin').click(function () {
+          $('.loginBtn').addClass('loginBtnActive') // 移除登录按钮的下划线样式
+          $('.loginWindow').show()
+          $('.registerWindow').hide()
+        })
+
+        // 登录/注销按钮点击事件
+        $('.loginBtn').click(function () {
+          $('.registerWindow').hide()
+          if ($(this).text() === '登录') {
+            // 显示登录窗口
+            $(this).toggleClass('loginBtnActive')
+            $('.loginWindow').toggle()
+          } else {
+            // 执行注销逻辑
+
+            Object.keys(localStorage).forEach(function (key) {
+              const userInfoString = localStorage.getItem(key)
+              if (userInfoString) {
+                const userInfo = JSON.parse(userInfoString)
+                if (userInfo.isLoggedIn) {
+                  // 找到了已登录的用户，更新其登录状态为false
+                  userInfo.isLoggedIn = false
+                  localStorage.setItem(key, JSON.stringify(userInfo))
+
+                  $('.loginBtn').text('登录') // 将按钮文本更改为“登录”
+                  $('.user').hide() // 隐藏用户名
+                  $('.loginWindow').hide() // 确保登录窗口被隐藏
+                  return // 退出循环
+                }
+              }
+            })
+          }
+        })
+      })
+    </script>
+  </body>
+</html>
